@@ -1,0 +1,28 @@
+{
+    "productName": "SensorFlow Analytics",
+    "appId": "com.sensorflow.analytics",
+    "directories": {
+        "output": "electron-dist"
+    },
+    "files": [
+        "dist/**/*",
+        "electron/**/*",
+        "resources/**/*"
+    ],
+    "win": {
+        "target": [
+            {
+                "target": "portable",
+                "arch": [
+                    "x64"
+                ]
+            }
+        ],
+        "icon": "resources/icon.png",
+        "signAndEditExecutable": false
+    },
+    "portable": {
+        "artifactName": "SensorFlow-Analytics-Portable.exe"
+    },
+    "forceCodeSigning": false
+}
