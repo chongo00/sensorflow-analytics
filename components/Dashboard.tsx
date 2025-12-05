@@ -23,7 +23,7 @@ interface DashboardProps {
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
 const Dashboard: React.FC<DashboardProps> = ({ readings, results, models, onNavigate }) => {
-  
+
   // Empty State Handling
   if (readings.length === 0) {
     return (
@@ -37,7 +37,7 @@ const Dashboard: React.FC<DashboardProps> = ({ readings, results, models, onNavi
             El sistema está esperando entradas. Importe un archivo de sensores (Excel/CSV) para ejecutar el análisis automático.
           </p>
         </div>
-        <button 
+        <button
           onClick={onNavigate}
           className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20"
         >
@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ readings, results, models, onNavi
   // Prepare data for the Calculated Results Chart
   const chartData = useMemo(() => {
     const map = new Map<number, any>();
-    
+
     // Initialize with time
     readings.forEach(r => {
       map.set(r.timestamp_sec, {
@@ -136,23 +136,28 @@ const Dashboard: React.FC<DashboardProps> = ({ readings, results, models, onNavi
       </div>
 
       {/* Main Analysis Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-200">
         <h2 className="text-lg font-semibold text-slate-800 mb-4">Resultados de Análisis Calculados</h2>
-        <div className="h-[400px] w-full">
+        <div className="h-[300px] md:h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis 
-                dataKey="time" 
-                label={{ value: 'Tiempo (horas)', position: 'insideBottomRight', offset: -5 }} 
+              <XAxis
+                dataKey="time"
+                label={{ value: 'Tiempo (h)', position: 'insideBottomRight', offset: -5, fontSize: 12 }}
                 stroke="#64748b"
+                tick={{ fontSize: 12 }}
               />
-              <YAxis label={{ value: 'Valor Resultante', angle: -90, position: 'insideLeft' }} stroke="#64748b" />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              <YAxis
+                label={{ value: 'Valor', angle: -90, position: 'insideLeft', fontSize: 12 }}
+                stroke="#64748b"
+                tick={{ fontSize: 12 }}
+              />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
                 labelFormatter={(value) => `Tiempo: ${value}h`}
               />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
               {models.map((model, index) => (
                 <Line
                   key={model.id}
@@ -166,29 +171,29 @@ const Dashboard: React.FC<DashboardProps> = ({ readings, results, models, onNavi
               ))}
               {/* Highlight XXX areas - simplified visual aid */}
               {chartData.some(d => Object.values(d).some(v => v === 'XXX')) && (
-                 <ReferenceArea y1={0} y2={10} label="Zona de Anomalía" fill="red" fillOpacity={0.05} />
+                <ReferenceArea y1={0} y2={10} label="Zona de Anomalía" fill="red" fillOpacity={0.05} />
               )}
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-       {/* Raw Data Reference Chart */}
-       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      {/* Raw Data Reference Chart */}
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-200">
         <h2 className="text-lg font-semibold text-slate-800 mb-4">Entradas de Sensores (mW)</h2>
-        <div className="h-[300px] w-full">
+        <div className="h-[250px] md:h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="time" stroke="#64748b" />
-              <YAxis stroke="#64748b" />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="ch4" name="Canal 4" stroke="#94a3b8" strokeWidth={1} dot={false} />
-              <Line type="monotone" dataKey="ch5" name="Canal 5" stroke="#cbd5e1" strokeWidth={1} dot={false} />
-              <Line type="monotone" dataKey="ch6" name="Canal 6" stroke="#475569" strokeWidth={1} dot={false} />
-              <Line type="monotone" dataKey="ch7" name="Canal 7" stroke="#64748b" strokeWidth={1} dot={false} />
-              <Line type="monotone" dataKey="ch8" name="Canal 8" stroke="#334155" strokeWidth={1} dot={false} />
+              <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 12 }} />
+              <YAxis stroke="#64748b" tick={{ fontSize: 12 }} />
+              <Tooltip contentStyle={{ fontSize: '12px' }} />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
+              <Line type="monotone" dataKey="ch4" name="CH4" stroke="#94a3b8" strokeWidth={1} dot={false} />
+              <Line type="monotone" dataKey="ch5" name="CH5" stroke="#cbd5e1" strokeWidth={1} dot={false} />
+              <Line type="monotone" dataKey="ch6" name="CH6" stroke="#475569" strokeWidth={1} dot={false} />
+              <Line type="monotone" dataKey="ch7" name="CH7" stroke="#64748b" strokeWidth={1} dot={false} />
+              <Line type="monotone" dataKey="ch8" name="CH8" stroke="#334155" strokeWidth={1} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

@@ -43,7 +43,7 @@ const App: React.FC = () => {
   }, [readings, models]);
 
   const handleUpdateModel = useCallback((modelId: string, params: CalibrationParams) => {
-    setModels(prev => prev.map(m => 
+    setModels(prev => prev.map(m =>
       m.id === modelId ? { ...m, params } : m
     ));
   }, []);
@@ -63,112 +63,116 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      
-      {/* Sidebar */}
-      <aside 
-        className={`${isSidebarOpen ? 'w-64' : 'w-20'} ${isMobile && !isSidebarOpen ? 'w-0' : ''} bg-slate-900 text-white transition-all duration-300 flex flex-col shadow-xl z-20 absolute md:relative h-full`}
-      >
-        <div className="h-16 flex items-center justify-center border-b border-slate-800">
-          {isSidebarOpen ? (
-            <div className="flex items-center space-x-2 font-bold text-xl tracking-tight animate-in fade-in">
+
+      {/* Sidebar (Desktop Only) */}
+      {!isMobile && (
+        <aside
+          className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-slate-900 text-white transition-all duration-300 flex flex-col shadow-xl z-20 relative h-full`}
+        >
+          <div className="h-16 flex items-center justify-center border-b border-slate-800">
+            {isSidebarOpen ? (
+              <div className="flex items-center space-x-2 font-bold text-xl tracking-tight animate-in fade-in">
+                <Activity className="text-blue-500" />
+                <span>SensorFlow</span>
+              </div>
+            ) : (
               <Activity className="text-blue-500" />
-              <span>SensorFlow</span>
-            </div>
-          ) : (
-            <Activity className="text-blue-500" />
-          )}
-        </div>
-
-        <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
-          <SidebarItem 
-            icon={<LayoutDashboard />} 
-            label="Panel Principal" 
-            isActive={view === 'dashboard'} 
-            isExpanded={isSidebarOpen}
-            onClick={() => { setView('dashboard'); if(isMobile) setSidebarOpen(false); }} 
-          />
-          <SidebarItem 
-            icon={<Settings />} 
-            label="Calibración" 
-            isActive={view === 'configuration'} 
-            isExpanded={isSidebarOpen}
-            onClick={() => { setView('configuration'); if(isMobile) setSidebarOpen(false); }} 
-          />
-          <SidebarItem 
-            icon={<FileInput />} 
-            label="Importar Datos" 
-            isActive={view === 'data-import'} 
-            isExpanded={isSidebarOpen}
-            onClick={() => { setView('data-import'); if(isMobile) setSidebarOpen(false); }} 
-          />
-          <div className="pt-4 pb-2 border-t border-slate-800 mt-4">
-             {isSidebarOpen && <span className="text-xs text-slate-500 px-3 uppercase font-semibold">Salida</span>}
+            )}
           </div>
-          <SidebarItem 
-            icon={<FileText />} 
-            label="Reportes" 
-            isActive={view === 'reports'} 
-            isExpanded={isSidebarOpen}
-            onClick={() => { setView('reports'); if(isMobile) setSidebarOpen(false); }} 
-          />
-          <SidebarItem 
-            icon={<Book />} 
-            label="Documentación" 
-            isActive={view === 'documentation'} 
-            isExpanded={isSidebarOpen}
-            onClick={() => { setView('documentation'); if(isMobile) setSidebarOpen(false); }} 
-          />
-        </nav>
 
-        <div className="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
-          {isSidebarOpen && <p>&copy; 2024 Analytics Corp</p>}
-        </div>
-      </aside>
+          <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
+            <SidebarItem
+              icon={<LayoutDashboard />}
+              label="Panel Principal"
+              isActive={view === 'dashboard'}
+              isExpanded={isSidebarOpen}
+              onClick={() => setView('dashboard')}
+            />
+            <SidebarItem
+              icon={<Settings />}
+              label="Calibración"
+              isActive={view === 'configuration'}
+              isExpanded={isSidebarOpen}
+              onClick={() => setView('configuration')}
+            />
+            <SidebarItem
+              icon={<FileInput />}
+              label="Importar Datos"
+              isActive={view === 'data-import'}
+              isExpanded={isSidebarOpen}
+              onClick={() => setView('data-import')}
+            />
+            <div className="pt-4 pb-2 border-t border-slate-800 mt-4">
+              {isSidebarOpen && <span className="text-xs text-slate-500 px-3 uppercase font-semibold">Salida</span>}
+            </div>
+            <SidebarItem
+              icon={<FileText />}
+              label="Reportes"
+              isActive={view === 'reports'}
+              isExpanded={isSidebarOpen}
+              onClick={() => setView('reports')}
+            />
+            <SidebarItem
+              icon={<Book />}
+              label="Documentación"
+              isActive={view === 'documentation'}
+              isExpanded={isSidebarOpen}
+              onClick={() => setView('documentation')}
+            />
+          </nav>
+
+          <div className="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
+            {isSidebarOpen && <p>&copy; 2024 Analytics Corp</p>}
+          </div>
+        </aside>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
-        {/* Overlay for mobile when sidebar is open */}
-        {isMobile && isSidebarOpen && (
-            <div 
-                className="absolute inset-0 bg-black bg-opacity-50 z-10"
-                onClick={() => setSidebarOpen(false)}
-            />
-        )}
 
         {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
-          <button 
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          {!isMobile && (
+            <button
+              onClick={() => setSidebarOpen(!isSidebarOpen)}
+              className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+          {isMobile && (
+            <div className="flex items-center space-x-2 font-bold text-lg tracking-tight text-slate-800">
+              <Activity className="text-blue-500 w-6 h-6" />
+              <span>SensorFlow</span>
+            </div>
+          )}
+
           <div className="flex items-center space-x-4">
-             <div className="text-sm text-slate-500 text-right hidden sm:block">
-               <p className="font-medium text-slate-700">Proyecto: Análisis Multi-Canal</p>
-               <p className="text-xs">Estado del Sistema: {readings.length > 0 ? 'Datos Cargados' : 'Esperando Datos'}</p>
-             </div>
-             <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold border ${readings.length > 0 ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
-               {readings.length > 0 ? 'A' : '-'}
-             </div>
+            <div className="text-sm text-slate-500 text-right hidden sm:block">
+              <p className="font-medium text-slate-700">Proyecto: Análisis Multi-Canal</p>
+              <p className="text-xs">Estado del Sistema: {readings.length > 0 ? 'Datos Cargados' : 'Esperando Datos'}</p>
+            </div>
+            <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold border ${readings.length > 0 ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+              {readings.length > 0 ? 'A' : '-'}
+            </div>
           </div>
         </header>
 
         {/* Scrollable View Area */}
-        <main className="flex-1 overflow-auto bg-slate-50 p-4 md:p-6 scrollbar-thin">
+        <main className={`flex-1 overflow-auto bg-slate-50 p-4 md:p-6 scrollbar-thin ${isMobile ? 'pb-20' : ''}`}>
           <div className="max-w-7xl mx-auto">
             {view === 'dashboard' && (
-              <Dashboard 
-                readings={readings} 
-                results={results} 
-                models={models} 
+              <Dashboard
+                readings={readings}
+                results={results}
+                models={models}
                 onNavigate={() => setView('data-import')}
               />
             )}
             {view === 'configuration' && (
-              <Configuration 
-                models={models} 
-                onUpdateModel={handleUpdateModel} 
+              <Configuration
+                models={models}
+                onUpdateModel={handleUpdateModel}
                 onReset={handleResetModels}
               />
             )}
@@ -183,6 +187,42 @@ const App: React.FC = () => {
             )}
           </div>
         </main>
+
+        {/* Bottom Navigation (Mobile Only) */}
+        {isMobile && (
+          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center h-16 z-30 shadow-lg pb-safe">
+            <BottomNavItem
+              icon={<LayoutDashboard />}
+              label="Panel"
+              isActive={view === 'dashboard'}
+              onClick={() => setView('dashboard')}
+            />
+            <BottomNavItem
+              icon={<Settings />}
+              label="Config"
+              isActive={view === 'configuration'}
+              onClick={() => setView('configuration')}
+            />
+            <BottomNavItem
+              icon={<FileInput />}
+              label="Importar"
+              isActive={view === 'data-import'}
+              onClick={() => setView('data-import')}
+            />
+            <BottomNavItem
+              icon={<FileText />}
+              label="Reportes"
+              isActive={view === 'reports'}
+              onClick={() => setView('reports')}
+            />
+            <BottomNavItem
+              icon={<Book />}
+              label="Docs"
+              isActive={view === 'documentation'}
+              onClick={() => setView('documentation')}
+            />
+          </nav>
+        )}
       </div>
     </div>
   );
@@ -198,20 +238,37 @@ const SidebarItem: React.FC<{
 }> = ({ icon, label, isActive, isExpanded, onClick }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center p-3 rounded-lg transition-all duration-200 group ${
-      isActive 
-        ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+    className={`w-full flex items-center p-3 rounded-lg transition-all duration-200 group ${isActive
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
         : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-    }`}
+      }`}
   >
     <div className={`min-w-[24px] ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`}>{icon}</div>
-    <span 
-      className={`ml-3 font-medium whitespace-nowrap overflow-hidden transition-all duration-300 ${
-        isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
-      }`}
+    <span
+      className={`ml-3 font-medium whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+        }`}
     >
       {label}
     </span>
+  </button>
+);
+
+// Helper Subcomponent for Bottom Navigation
+const BottomNavItem: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}> = ({ icon, label, isActive, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive ? 'text-blue-600' : 'text-slate-400'
+      }`}
+  >
+    <div className={`${isActive ? 'scale-110' : ''} transition-transform duration-200`}>
+      {React.cloneElement(icon as React.ReactElement, { size: 20 })}
+    </div>
+    <span className="text-[10px] font-medium">{label}</span>
   </button>
 );
 
