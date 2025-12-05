@@ -1,0 +1,5 @@
+{
+  "name": "SensorFlow Analytics",
+  "description": "A comprehensive automated analysis system for multi-channel sensor data, featuring real-time calibration, model management, and interactive time-series visualization.",
+  "requestFramePermissions": []
+}
